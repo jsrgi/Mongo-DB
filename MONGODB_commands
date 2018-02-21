@@ -1,0 +1,323 @@
+
+Mongo Db Commands
+
+* use DATABASE
+       use DATABASE_NAME
+
+* databases list
+       show dbs
+
+NOTE: To display database, you need to insert at least one document into it.
+
+* dropDatabase()
+ 	db.dropDatabase()
+	Example:
+	>use mydb
+	switched to db mydb
+	>db.dropDatabase()
+	>{ "dropped" : "mydb", "ok" : 1 }
+
+* createCollection()
+	db.createCollection(name, options)
+	Example:
+	>use test
+	switched to db test
+	>db.createCollection("mycollection")
+	{ "ok" : 1 }
+	
+* list collections.
+   	show collections
+	
+* drop() Method
+    	db.COLLECTION_NAME.drop()
+	Example:
+	>db.mycollection.drop()
+	true
+
+* Datatype:
+
+	String − This is the most commonly used datatype to store the data. String in MongoDB must be UTF-8 valid.
+
+	Integer − This type is used to store a numerical value. Integer can be 32 bit or 64 bit depending upon your server.
+
+	Boolean − This type is used to store a boolean (true/ false) value.
+
+	Double − This type is used to store floating point values.
+
+	Min/ Max keys − This type is used to compare a value against the lowest and highest BSON elements.
+
+	Arrays − This type is used to store arrays or list or multiple values into one key.
+
+	Timestamp − ctimestamp. This can be handy for recording when a document has been modified or added.
+
+	Object − This datatype is used for embedded documents.
+
+	Null − This type is used to store a Null value.
+
+	Symbol − This datatype is used identically to a string; however, it's generally reserved for languages that use a specific symbol type.
+
+	Date − This datatype is used to store the current date or time in UNIX time format. You can specify your own date time by creating 		object of Date and passing day, month, year into it.
+
+	Object ID − This datatype is used to store the document’s ID.
+
+	Binary data − This datatype is used to store binary data.
+
+	Code − This datatype is used to store JavaScript code into the document.
+
+	Regular expression − This datatype is used to store regular expression.
+
+* insert() 
+	db.COLLECTION_NAME.insert(document)
+	
+	Example: single document
+
+	db.mycol.insert({
+	   _id: ObjectId(7df78ad8902c),
+	   title: 'MongoDB Overview', 
+	   description: 'MongoDB is no sql database',
+	   by: 'tutorials point',
+	   url: 'http://www.tutorialspoint.com',
+	   tags: ['mongodb', 'database', 'NoSQL'],
+	   likes: 100
+	})
+
+	Example: Multiple document
+
+	db.post.insert([
+	   {
+	      title: 'MongoDB Overview', 
+	      description: 'MongoDB is no sql database',
+	      by: 'tutorials point',
+	      url: 'http://www.tutorialspoint.com',
+	      tags: ['mongodb', 'database', 'NoSQL'],
+	      likes: 100
+	   },
+	
+	   {
+	      title: 'NoSQL Database', 
+	      description: 'NoSQL database doesn't have tables',
+	      by: 'tutorials point',
+	      url: 'http://www.tutorialspoint.com',
+	      tags: ['mongodb', 'database', 'NoSQL'],
+	      likes: 20, 
+	      comments: [	
+		 {
+		    user:'user1',
+		    message: 'My first comment',
+		    dateCreated: new Date(2013,11,10,2,35),
+		    like: 0 
+		 }
+	      ]
+	   }
+	])
+
+
+* find()
+	db.COLLECTION_NAME.find()
+
+*To display the results in a formatted way
+	db.mycol.find().pretty()
+
+* AND and OR method
+	
+	Example:
+	AND:
+
+	>db.mycol.find(
+	   {
+	      $and: [
+		 {key1: value1}, {key2:value2}
+	      ]
+	   }
+	).pretty()
+
+	Example:
+	OR:
+	
+	>db.mycol.find(
+	   {
+	      $or: [
+		 {key1: value1}, {key2:value2}
+	      ]
+	   }
+	).pretty()
+
+* update() 
+	db.COLLECTION_NAME.update(SELECTION_CRITERIA, UPDATED_DATA)
+	
+	Example:
+	>db.mycol.update({'title':'MongoDB Overview'},{$set:{'title':'New MongoDB Tutorial'}})
+
+	Example: To Update Multi Document
+	>db.mycol.update({'title':'MongoDB Overview'},{$set:{'title':'New MongoDB Tutorial'}},{multi:true})
+
+*  save()
+	db.COLLECTION_NAME.save({_id:ObjectId(),NEW_DATA})
+	Example:
+
+	>db.mycol.save(
+	   {
+	      "_id" : ObjectId(5983548781331adf45ec7), "title":"Tutorials Point New Topic",
+		 "by":"Tutorials Point"
+	   }
+	)
+
+* remove()
+NOTE: remove() method accepts two parameters. One is deletion criteria and second is justOne flag.
+
+	db.COLLECTION_NAME.remove(DELLETION_CRITTERIA)
+	
+	Example:
+	db.mycol.remove({'title':'MongoDB Overview'})
+	
+	*Remove Only One
+	db.COLLECTION_NAME.remove(DELETION_CRITERIA,1)
+	
+	*Remove All Documents
+	db.mycol.remove()
+
+* find() Method With Projection
+	db.COLLECTION_NAME.find({},{KEY:1})
+
+	EXAMPLE:
+	>db.mycol.find({},{"title":1,_id:0})
+	{"title":"MongoDB Overview"}
+	{"title":"NoSQL Overview"}
+	{"title":"Tutorials Point Overview"}
+	>
+
+* Limit() Method
+	db.COLLECTION_NAME.find().limit(NUMBER)
+	
+	EXAMPLE :
+	>db.mycol.find({},{"title":1,_id:0}).limit(2)
+	{"title":"MongoDB Overview"}
+	{"title":"NoSQL Overview"}
+	>
+
+* Skip() Method
+	db.COLLECTION_NAME.find().limit(NUMBER).skip(NUMBER)
+
+	EXAMPLE :
+	>db.mycol.find({},{"title":1,_id:0}).limit(1).skip(1)
+	{"title":"NoSQL Overview"}
+	>
+
+* sort() Method
+	db.COLLECTION_NAME.find().sort({KEY:1})
+	
+	EXAMPLE :
+	>db.mycol.find({},{"title":1,_id:0}).sort({"title":-1})
+	{"title":"Tutorials Point Overview"}
+	{"title":"NoSQL Overview"}
+	{"title":"MongoDB Overview"}
+	>
+
+* aggregate() Method
+	db.COLLECTION_NAME.aggregate(AGGREGATE_OPERATION)
+
+	EXAMPLE :	
+	> db.mycol.aggregate([{$group : {_id : "$by_user", num_tutorial : {$sum : 1}}}])
+	{
+	   "result" : [
+	      {
+		 "_id" : "tutorials point",
+		 "num_tutorial" : 2
+	      },
+	      {
+		 "_id" : "Neo4j",
+		 "num_tutorial" : 1
+	      }
+	   ],
+	   "ok" : 1
+	}
+	>
+
+NOTE: Sql equivalent query for the above use case will be select by_user, count(*) from mycol group by by_user.
+
+* Replication
+
+	Replication is the process of synchronizing data across multiple servers. Replication provides redundancy and increases data availability with multiple copies of data on different database servers. Replication protects a database from the loss of a single server. Replication also allows you to recover from hardware failure and service interruptions. With additional copies of the data, you can dedicate one to disaster recovery, reporting, or backup.
+
+	Why Replication?
+	
+	* To keep your data safe
+	* High (24*7) availability of data
+	* Disaster recovery
+	* No downtime for maintenance (like backups, index rebuilds, compaction)
+	* Read scaling (extra copies to read from)
+	* Replica set is transparent to the application
+
+  syntax:
+	mongod --port "PORT" --dbpath "YOUR_DB_DATA_PATH" --replSet "REPLICA_SET_INSTANCE_NAME"
+
+  Example:
+	mongod --port 27017 --dbpath "D:\set up\mongodb\data" --replSet rs0
+
+* Sharding
+	
+	Sharding is the process of storing data records across multiple machines and it is MongoDB's approach to meeting the demands of data growth. As the size of the data increases, a single machine may not be sufficient to store the data nor provide an acceptable read and write throughput. Sharding solves the problem with horizontal scaling. With sharding, you add more machines to support data growth and the demands of read and write operations.
+
+	Why Sharding?
+	
+	* In replication, all writes go to master node
+	* Latency sensitive queries still go to master
+	* Single replica set has limitation of 12 nodes
+	* Memory can't be large enough when active dataset is big
+	* Local disk is not big enough
+	* Vertical scaling is too expensive
+
+* Dump MongoDB Data
+	mongodump
+
+* Restore data
+ 	mongorestore
+	mongorestore -h localhost C:\data
+
+	mongodump --host ds129050.mlab.com --port 29050 --username kggroup --password kggroup --out /opt/backup/mongodump-2011-10-24
+
+
+	mongodump --host localhost --port 27017
+	
+ * create users :	
+ 
+db.createUser( {user: "root", pwd: "root",roles: [ "readWrite", "dbAdmin" ]})
+
+
+
+"C:\Program Files\MongoDB\Server\3.2\bin\mongod.exe" --dbpath "c:\data"
+
+	
+	msiexec.exe /q /i mongodb-win32-x86_64-2008plus-ssl-3.4.5-signed.msi ^INSTALLLOCATION="C:\Program Files\MongoDB\Server\3.2\" ^ADDLOCAL="all"
+	
+	
+msiexec.exe /q /i mongodb-win32-x86_64-2008plus-ssl-3.4.5-signed.msi ^INSTALLLOCATION="C:\Program Files\MongoDB\Server\3.2\" ^ADDLOCAL="MonitoringTools,ImportExportTools,MiscellaneousTools"
+
+
+db.getCollection('eda_thread').aggregate(
+[
+    {
+        $group:
+        {
+            _id:
+            {
+                day: { $dayOfMonth: "$start_time" },
+                month: { $month: "$start_time" }, 
+                year: { $year: "$start_time" }
+            }, 
+            count: { $sum:1 },
+            date: { $first: "$start_time" }
+        }
+    },
+    {
+        $project:
+        {
+            date:
+            {
+                $dateToString: { format: "%Y-%m-%d", date: "$date" }
+            },
+            count: 1,
+            _id: 0
+        }
+    }
+])
