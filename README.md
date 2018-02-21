@@ -2,7 +2,7 @@
 
 Install and Create DB:
 
-1. Download and install MOndo DB MSI
+1. Download and install MongoDB MSI
 2. Go to the installed path (C:\Program Files\MongoDB\Server\3.2\bin\)
 3. msiexec.exe /q /i mongodb-win32-x86_64-2008plus-ssl-3.2-signed.msi ^INSTALLLOCATION="C:\Program Files\MongoDB\Server\3.2\" ^ADDLOCAL="all"
 4. msiexec.exe /q /i mongodb-win32-x86_64-2008plus-ssl-3.2-signed.msi ^INSTALLLOCATION="C:\Program Files\MongoDB\Server\3.2\" ^ADDLOCAL="MonitoringTools,ImportExportTools,MiscellaneousTools"
