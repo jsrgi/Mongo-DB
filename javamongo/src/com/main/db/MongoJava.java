@@ -49,6 +49,7 @@ public class MongoJava {
 		Query.put("name", "Malarvizhi");
 
 		table.remove(Query);
+		mongoClient.close();
 	}
 
 }
